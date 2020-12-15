@@ -1,9 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:whitepeach/config/http_request.dart';
 import 'package:whitepeach/model/user_model.dart';
 import 'package:whitepeach/screens/signup_screen.dart';
 import 'package:whitepeach/service/http_service.dart';
+import 'package:whitepeach/util/http_util.dart';
 import 'package:whitepeach/widgets/have_account_check.dart';
 import 'package:whitepeach/widgets/rounded_button.dart';
 import 'package:whitepeach/widgets/rounded_input_field.dart';
@@ -57,7 +59,8 @@ class LoginBackground extends StatelessWidget {
           ),
           RoundedButton(
             text: "登录",
-            press: () => login(this.username, this.password),
+            press: () => _handleAddShelf(this.username, this.password),
+            // press: () => LoginRequest.requestLoginParams(this.username, this.password),
           ),
           SizedBox(
             height: size.height * 0.03,
@@ -86,4 +89,33 @@ class LoginBackground extends StatelessWidget {
       print(result.data);
     });
   }
+}
+
+/// http_request.dart 中封装的 DIO,比http_util.dart中封装的要好
+/// 但是那个有点复杂我暂时没搞懂特别是加了 Token 和其他一些设置
+/// 暂时用下面那个进行使用后面在进行修补
+class LoginRequest {
+  static requestLoginParams(String username, String password) async {
+    // 1.构建URL
+    final loginURL = "http://192.168.124.9:8080/user/login}";
+    // 2.发送网络请求获取结果
+    final result = await XZHttpRequest.request(loginURL, method: "post", params: {
+      'username': username,
+      'password': password
+    });
+
+    print("result is $result");
+  }
+}
+
+// POST 请求
+_handleAddShelf (String username, String password) async {
+  var result = await HttpUtils.request(
+      '/user/login',
+      method: HttpUtils.POST,
+      data: {
+        'username': username,
+        'password': password
+      }
+  );
 }
