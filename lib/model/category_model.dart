@@ -68,7 +68,7 @@ class CategoryState with ChangeNotifier {
   int page = 1; // 列表页数，当改变一级分类或二级分类时进行改变
   String noMoreText = ''; // 显示更多的表示
   bool newCategory = true;
-  List<Product> products;
+  List<Product> products = [];
 
 //  CategoryState(this._titleList);
 

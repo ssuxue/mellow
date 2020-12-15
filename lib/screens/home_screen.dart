@@ -10,7 +10,7 @@ import 'details_screen.dart';
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size; //它将提供设备总宽高
+    var size = MediaQuery.of(context).size; // 它将提供设备总宽高
     return Scaffold(
       bottomNavigationBar: BottomNavBar(),
       body: Stack(

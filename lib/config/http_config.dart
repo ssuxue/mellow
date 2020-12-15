@@ -5,4 +5,5 @@ const servicePath = {
   'getMilkyTea': baseUrl + "getMilkyTea", // 获取所有奶茶
   'getAttribute': baseUrl + "getAllAttribute", // 获取所有属性
   'getMilkyTeaByCid': baseUrl + "getMilkyTeaByCategory/", // 通过分类ID获取奶茶
+  'login': baseUrl + 'user/login'
 };

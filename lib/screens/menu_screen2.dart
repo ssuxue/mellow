@@ -77,6 +77,7 @@ class _LeftCategoryNavState extends State<LeftCategoryNav> {
     );
   }
 
+  /// 设置分类的InkWell
   Widget _leftInkWel(int index) {
     bool isSelected = false;
     isSelected = (index == listIndex);
@@ -85,8 +86,7 @@ class _LeftCategoryNavState extends State<LeftCategoryNav> {
       onTap: () {
         // var productLis
         var cid = list[index].id;
-        Provider.of<CategoryState>(context, listen: false)
-            .changeCategoryId(cid);
+        context.read<CategoryState>().changeCategoryId(cid);
       },
       child: Container(
           height: 70,
@@ -144,15 +144,22 @@ class _CategoryGoodsListState extends State<CategoryGoodsList> {
   @override
   void initState() {
     super.initState();
-    int cid = Provider.of<CategoryState>(context, listen: false).firstCategoryId;
+    var state = context.read<CategoryState>();
+    int cid = state.categoryId;
+    cid ??= 2;
+    // print("这里是分类ID:$cid");
     _getProductsByCid(cid);
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 200,
-      height: 200,
+      width: 300.0,
+      child: ListView.builder(
+          itemCount: products.length,
+          itemBuilder: (context, index) {
+            return _milkyTeaInkWel(index);
+          }),
     );
   }
 
@@ -160,12 +167,146 @@ class _CategoryGoodsListState extends State<CategoryGoodsList> {
   _getProductsByCid(int id) async {
     await request("getMilkyTeaByCid", formData: id).then((value) {
       var data = json.decode(value.toString());
-      print(data['result']);
       ProductResult result = ProductResult.fromJson(data["result"]);
 
       setState(() {
         products = result.data;
       });
     });
+  }
+
+
+  /// 设置奶茶的InkWell
+  Widget _milkyTeaInkWel(int index) {
+
+    return InkWell(
+      onTap: () {
+        // var productDetail
+      },
+      child: Container(
+        // color: Colors.white,
+          height: 140,
+          decoration: BoxDecoration(
+              border: Border(
+                  bottom: BorderSide(
+                      width: 2, color: Color.fromRGBO(226, 225, 228, 1.0)))),
+          child: Row(
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 90,
+                    child: Image.network(products[index].picture),
+                  )
+                ],
+              ),
+              Column(
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        products[index].name,
+                        style: Theme.of(context).textTheme.headline6,
+                      )
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Column(
+                        children: [
+                          Container(
+                            color: Color.fromRGBO(198, 223, 200, 0.6),
+                            padding: EdgeInsets.all(5),
+                            margin: EdgeInsets.only(right: 10),
+                            child: Text(
+                              "可做冷饮",
+                              style: TextStyle(color: Colors.green),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Container(
+                            color: Color.fromRGBO(225, 225, 236, 0.6),
+                            padding: EdgeInsets.all(5),
+                            child: Text(
+                              "含乳制品、茶",
+                              style: TextStyle(color: Colors.black38),
+                            ),
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Column(
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                // products[index].description,
+                                "冷500ml 耶耶冰淇凌打顶", // TODO 用这里这个错误令人窒息，长度溢出完全解决不了
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 2,
+                                style: TextStyle(
+                                    fontSize: 15.0
+                                ),
+                              )
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                "优质生耶乳与芒芒冰沙轻轻...", // TODO 暂时手动写两行
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 2,
+                                style: TextStyle(
+                                    fontSize: 15.0
+                                ),
+                              )
+                            ],
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        children: [
+                          Text(
+                            "￥${products[index].price}",
+                            style: Theme.of(context).textTheme.headline5,
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Container(
+                            height: 25,
+                            width: 78,
+                            child: RaisedButton(
+                              color: Color.fromRGBO(250, 152, 58, 1.0),
+                              textColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(13)),
+                              child: Text("选规格"),
+                              onPressed: () {},
+                            ),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              )
+            ],
+          )),
+    );
   }
 }
